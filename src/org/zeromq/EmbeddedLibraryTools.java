@@ -27,7 +27,11 @@ public class EmbeddedLibraryTools {
 		if (osName.toLowerCase().indexOf("windows") > -1) {
 			osName = "Windows";
 		}
-		
+
+        if (osName.equals("Mac OS X")) {
+            osName = "MacOSX";
+        }
+
 		return System.getProperty("os.arch") + "/" + osName;
 	}
 	
