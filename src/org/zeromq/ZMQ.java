@@ -566,18 +566,6 @@ public class ZMQ {
         public long getAffinity() {
             return getLongSockopt(AFFINITY);
         }
-
-        /**
-         * @see #setDelayAttachOnConnect(long)
-         * 
-         * @return the keep alive setting.
-         */
-        public long getDelayAttachOnConnectSetting () {
-            if (ZMQ.version_full() < ZMQ.make_version(3, 2, 0))
-                return -1;
-
-            return getLongSockopt (DELAYATTACH);
-        }
         
         /**
          * @see #setTCPKeepAlive(long)
