@@ -25,6 +25,9 @@
 #include "util.hpp"
 #include "org_zeromq_ZMQ.h"
 
+extern void *get_socket (JNIEnv *env,
+                         jobject obj);
+
 /**
  * Called by Java's ZMQ::version_full().
  */
@@ -146,6 +149,15 @@ JNIEXPORT jlong JNICALL Java_org_zeromq_ZMQ_EINPROGRESS (JNIEnv *env,
 }
 
 /**
+ * Called by Java's ZMQ::EHOSTUNREACH().
+ */
+JNIEXPORT jlong JNICALL Java_org_zeromq_ZMQ_EHOSTUNREACH (JNIEnv *env,
+                                                         jclass cls)
+{
+    return EHOSTUNREACH;
+}
+
+/**
  * Called by Java's ZMQ::EMTHREAD().
  */
 JNIEXPORT jlong JNICALL Java_org_zeromq_ZMQ_EMTHREAD (JNIEnv *env,
@@ -179,4 +191,33 @@ JNIEXPORT jlong JNICALL Java_org_zeromq_ZMQ_ETERM (JNIEnv *env,
                                                    jclass cls)
 {
     return ETERM;
+}
+
+/**
+ * Called by Java's ZMQ::ENOTSOCK().
+ */
+JNIEXPORT jlong JNICALL Java_org_zeromq_ZMQ_ENOTSOCK (JNIEnv *env,
+                                                      jclass cls)
+{
+    return ENOTSOCK;
+}
+
+/**
+ * Called by Java's ZMQ::proxy().
+ */
+JNIEXPORT void JNICALL Java_org_zeromq_ZMQ_run_1proxy (JNIEnv *env,
+                                                   jclass cls,
+                                                   jobject frontend_,
+                                                   jobject backend_,
+                                                   jobject capture_)
+{
+#if ZMQ_VERSION >= ZMQ_MAKE_VERSION(3,2,2)
+    void *frontend = get_socket (env, frontend_);
+    void *backend = get_socket (env, backend_);
+    void *capture = NULL;
+    if (capture_ != NULL)
+        capture = get_socket (env, capture_);
+
+    zmq_proxy (frontend, backend, capture);
+#endif
 }
