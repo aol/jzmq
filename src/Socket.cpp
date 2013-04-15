@@ -128,6 +128,7 @@ JNIEXPORT jlong JNICALL Java_org_zeromq_ZMQ_00024Socket_getLongSockopt (JNIEnv *
     case ZMQ_TCP_KEEPALIVE_IDLE:
     case ZMQ_TCP_KEEPALIVE_CNT:
     case ZMQ_TCP_KEEPALIVE_INTVL:
+    case ZMQ_DELAY_ATTACH_ON_CONNECT:
     case ZMQ_IPV4ONLY:
 #endif
     case ZMQ_AFFINITY:
@@ -147,6 +148,7 @@ JNIEXPORT jlong JNICALL Java_org_zeromq_ZMQ_00024Socket_getLongSockopt (JNIEnv *
                 || (option == ZMQ_TCP_KEEPALIVE_IDLE)
                 || (option == ZMQ_TCP_KEEPALIVE_CNT)
                 || (option == ZMQ_TCP_KEEPALIVE_INTVL)
+                || (option == ZMQ_DELAY_ATTACH_ON_CONNECT)
                 || (option == ZMQ_IPV4ONLY)
             ) {
                 int optval = 0;
@@ -250,6 +252,7 @@ JNIEXPORT void JNICALL Java_org_zeromq_ZMQ_00024Socket_setLongSockopt (JNIEnv *e
     case ZMQ_TCP_KEEPALIVE_IDLE:
     case ZMQ_TCP_KEEPALIVE_CNT:
     case ZMQ_TCP_KEEPALIVE_INTVL:
+    case ZMQ_DELAY_ATTACH_ON_CONNECT:
     case ZMQ_IPV4ONLY:
     case ZMQ_ROUTER_MANDATORY:
 #endif
@@ -284,6 +287,7 @@ JNIEXPORT void JNICALL Java_org_zeromq_ZMQ_00024Socket_setLongSockopt (JNIEnv *e
                 || (option == ZMQ_TCP_KEEPALIVE_IDLE)
                 || (option == ZMQ_TCP_KEEPALIVE_CNT)
                 || (option == ZMQ_TCP_KEEPALIVE_INTVL)
+                || (option == ZMQ_DELAY_ATTACH_ON_CONNECT)
                 || (option == ZMQ_IPV4ONLY)
                 || (option == ZMQ_ROUTER_MANDATORY)
 #endif

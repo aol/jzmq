@@ -568,6 +568,18 @@ public class ZMQ {
         }
         
         /**
+         * @see #setDelayAttachOnConnect(long) 
+         * 
+         * @return the delay attach on connect setting.
+         */
+        public long getDelayAttachOnConnectSetting () {
+        	if (ZMQ.version_full() < ZMQ.make_version(3, 2, 0))
+        		return -1; 
+        	
+        	return getLongSockopt (DELAYATTACH);
+        }
+        
+        /**
          * @see #setTCPKeepAlive(long)
          * 
          * @return the keep alive setting.
@@ -926,6 +938,18 @@ public class ZMQ {
          */
         public void setAffinity(long affinity) {
             setLongSockopt(AFFINITY, affinity);
+        }
+        
+        /**
+         * Set DELAY_ATTACH_ON_CONNECT flag.
+         * Possible values are 0, 1.
+         * 
+         * @param optVal 
+         *            The value of 'ZMQ_DELAY_ATTACH_ON_CONNECT' to turn DELAY on (1) or off (0).
+         */
+        public void setDelayAttachOnConnect (long optVal) {
+        	if (ZMQ.version_full() >= ZMQ.make_version(3, 2, 0))
+        		setLongSockopt (DELAYATTACH, optVal);
         }
 
         /**
@@ -1444,6 +1468,7 @@ public class ZMQ {
         private static final int KEEPALIVECNT = 35;
         private static final int KEEPALIVEIDLE = 36;
         private static final int KEEPALIVEINTVL = 37;
+        private static final int DELAYATTACH = 39; 
         private static final int XPUB_VERBOSE = 40;
 
     }
