@@ -100,6 +100,16 @@ public class EmbeddedLibraryTools {
     }
 
     private static boolean loadEmbeddedLibrary() {
+    	
+        String osName = System.getProperty("os.name");
+        if (osName.toLowerCase().indexOf("windows") > -1) {
+        	// Changing load mechanism for Windows so we can properly load dependent libraries.
+        	if (loadEmbeddedWindowsLibraries()) {
+        		return true;
+        	}
+        	// If that fails, continue like normal.
+        }
+
 
         boolean usingEmbedded = false;
 
@@ -151,6 +161,50 @@ public class EmbeddedLibraryTools {
 
         return usingEmbedded;
 
+    }
+    
+    private static boolean loadEmbeddedWindowsLibraries() {
+		List<String> libraries = new ArrayList<String>();
+		libraries.add("libgcc_s_sjlj-1.dll");
+		libraries.add("libstdc++-6.dll");
+		libraries.add("libzmq.dll");
+		libraries.add("libjzmq.dll");
+		
+		String resourcePath = "/NATIVE/" + getCurrentPlatformIdentifier() + "/";
+		
+		try {
+			final File libDir = File.createTempFile("jzmq-", ".lib");
+			libDir.delete();
+			libDir.mkdir();
+			libDir.deleteOnExit();
+			for (String library : libraries) {
+				URL nativeLibraryUrl = ZMQ.class.getResource(resourcePath + library);
+				if (nativeLibraryUrl == null) {
+					return false;
+				}
+				
+				final File libfile = new File(libDir, library);
+				libfile.deleteOnExit(); // just in case
+
+				final InputStream in = nativeLibraryUrl.openStream();
+				final OutputStream out = new BufferedOutputStream(new FileOutputStream(libfile));
+
+				int len = 0;
+				byte[] buffer = new byte[8192];
+				while ((len = in.read(buffer)) > -1)
+					out.write(buffer, 0, len);
+				out.close();
+				in.close();
+
+				System.load(libfile.getAbsolutePath());
+				
+				libfile.delete();
+			}
+			return true;
+		} catch (IOException x) {
+			// mission failed, do nothing
+		}
+		return false;
     }
 
     private EmbeddedLibraryTools() {
