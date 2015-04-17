@@ -412,6 +412,16 @@ public class ZMQ {
 
         /** Opaque data used by JNI driver. */
         private long contextHandle;
+
+        /**
+         * Sets the maximum number of sockets allowed on the context
+         */
+        public native boolean setMaxSockets(int maxSockets);
+
+        /**
+         * The maximum number of sockets allowed on the context
+         */
+        public native int getMaxSockets();
     }
 
     /**
